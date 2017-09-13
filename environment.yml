@@ -51,8 +51,6 @@ dependencies:
 - jupyter_client=5.1.0=py36_0
 - jupyter_console=5.1.0=py36_0
 - jupyter_core=4.3.0=py36_0
-- jupyterlab=0.27.0=py36_1
-- jupyterlab_launcher=0.4.2=py36_0
 - krb5=1.14.2=0
 - libffi=3.2.1=3
 - libgfortran=3.0.0=0
@@ -151,13 +149,7 @@ dependencies:
   - jupyter-console==5.1.0
   - jupyter-core==4.3.0
   - jupyterlab-launcher==0.4.2
-  - keras==2.0.8
   - markdown==2.6.9
   - prompt-toolkit==1.0.15
-  - protobuf==3.4.0
-  - ramp-workflow==0.1.dev0
-  - tensorflow==1.3.0
-  - tensorflow-tensorboard==0.1.5
-  - werkzeug==0.12.2
 prefix: /Users/dgagne/anaconda3/envs/ramp
 
