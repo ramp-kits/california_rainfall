@@ -15,14 +15,11 @@ os.mkdir('data')
 
 url = 'https://storage.ramp.studio/california_rainfall'
 variables = ["PSL", "TMQ", "TS", "U_500", "V_500"]
-csv_variables = ["precip", "precip_90"]
 modes = ["train", "test"]
 f_names = []
 for mode in modes:
     for var in variables:
         f_names.append("{0}_{1}.nc".format(mode, var))
-    for var in csv_variables:
-        f_names.append("{0}_{1}.csv".format(mode, var))
 for f_name in f_names:
     url_in = '{}/{}'.format(url, f_name)
     f_name_out = os.path.join('data', f_name)
