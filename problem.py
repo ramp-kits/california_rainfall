@@ -54,5 +54,5 @@ def get_train_data(path='./'):
     return _read_data(path, 'train')
 
 
-def get_test_data(path='./data'):
+def get_test_data(path='./'):
     return _read_data(path, 'test')
