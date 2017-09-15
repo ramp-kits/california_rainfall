@@ -10,6 +10,11 @@ conda env create -f environment.yml
 source activate ramp_ci_2017
 ```
 
+Download the contest data using the following command
+```bash
+python download_data.py
+```
+
 Install [ramp-workflow](https://github.com/paris-saclay-cds/ramp-workflow), then execute the following line
 ```bash
 ramp_test_submission
