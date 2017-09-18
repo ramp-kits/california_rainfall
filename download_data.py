@@ -8,6 +8,9 @@ delete the zip file `data/imgs.zip` to save space.
 import os
 import shutil
 from subprocess import call
+from os.path import join
+import ssl 
+import requests
 
 if os.path.exists('data'):
     shutil.rmtree('data')
@@ -21,8 +24,12 @@ for mode in modes:
     for var in variables:
         f_names.append("{0}_{1}.nc".format(mode, var))
 for f_name in f_names:
+    print(f_name)
     url_in = '{}/{}'.format(url, f_name)
     f_name_out = os.path.join('data', f_name)
-    cmd = 'wget {} --output-document={} --no-check-certificate'.format(
-        url_in, f_name_out)
-    call(cmd, shell=True)
+    #cmd = 'wget {} --output-document={} --no-check-certificate'.format(
+    #    url_in, f_name_out)
+    #call(cmd, shell=True)
+    f_data = requests.get(url_in, verify=False)
+    with open(join("data", f_name), "wb") as f_file:
+        f_file.write(f_data.content)
