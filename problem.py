@@ -39,7 +39,6 @@ def _read_data(path, f_prefix):
     X_coll = []
     for d, data_var in enumerate(data_vars):
         nc_file = join(path, "data", f_prefix + "_{0}.nc".format(data_var))
-        print(nc_file)
         ds = xr.open_dataset(nc_file, decode_times=False)
         ds.load()
         X_coll.append(ds[data_var].stack(enstime=("ens", "time")
