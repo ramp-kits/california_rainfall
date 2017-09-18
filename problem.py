@@ -16,7 +16,7 @@ workflow = rw.workflows.GridFeatureExtractorClassifier()
 score_types = [
     rw.score_types.BrierSkillScore(name="BSS", precision=3),
     rw.score_types.BrierScore(name="BS", precision=3),
-    rw.score_types.BrierScoreReliability(name="BS Rel", precision=3),
+    rw.score_types.BrierScoreReliability(name="BS Rel", precision=5),
     rw.score_types.BrierScoreResolution(name="BS Res", precision=3),
     rw.score_types.ROCAUC(name="AUC", precision=3),
 ]
@@ -39,7 +39,6 @@ def _read_data(path, f_prefix):
     X_coll = []
     for d, data_var in enumerate(data_vars):
         nc_file = join(path, "data", f_prefix + "_{0}.nc".format(data_var))
-        print(nc_file)
         ds = xr.open_dataset(nc_file, decode_times=False)
         ds.load()
         X_coll.append(ds[data_var].stack(enstime=("ens", "time")
