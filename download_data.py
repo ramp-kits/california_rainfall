@@ -8,13 +8,17 @@ delete the zip file `data/imgs.zip` to save space.
 import os
 import shutil
 from subprocess import call
-from os.path import join
+from os.path import exists, join
 import ssl 
 import requests
 
 if os.path.exists('data'):
-    shutil.rmtree('data')
-os.mkdir('data')
+    data_files = os.listdir('data')
+    for data_file in data_files:
+        if ".nc" in data_file:
+            os.remove(join('data', data_file))
+if not exists("data"):
+    os.mkdir('data')
 
 url = 'https://storage.ramp.studio/california_rainfall'
 variables = ["PSL", "TMQ", "TS", "U_500", "V_500"]
