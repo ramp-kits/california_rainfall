@@ -37,14 +37,16 @@ def get_cv(X, y):
 def _read_data(path, f_prefix):
     data_vars = ["TS", "PSL", "TMQ", "U_500", "V_500"]
     X_coll = []
-    for data_var in data_vars:
+    for d, data_var in enumerate(data_vars):
         nc_file = join(path, "data", f_prefix + "_{0}.nc".format(data_var))
         print(nc_file)
         ds = xr.open_dataset(nc_file, decode_times=False)
         ds.load()
-        X_coll.append(ds[data_var].stack(enstime=("ens", "time")).transpose("enstime", "lat", "lon"))
+        X_coll.append(ds[data_var].stack(enstime=("ens", "time")).transpose("enstime", "lat", "lon").astype(np.float32))
         ds.close()
+        del ds
     X_ds = xr.merge(X_coll)
+    del X_coll[:]
     y = pd.read_csv(join(path, "data", f_prefix + "_precip_90.csv"), index_col="Year")
     y_array = np.concatenate([y[c] for c in y.columns])
     return X_ds, y_array

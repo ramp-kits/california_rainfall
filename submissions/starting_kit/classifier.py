@@ -1,6 +1,7 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn.base import BaseEstimator
 
+
 class Classifier(BaseEstimator):
     def __init__(self):
         self.clf = LogisticRegression(C=0.01, penalty="l1")

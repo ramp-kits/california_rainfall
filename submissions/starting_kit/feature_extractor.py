@@ -1,6 +1,6 @@
-import xarray as xr
-import pandas as pd
+import numpy as np
 from sklearn.decomposition import PCA
+
 
 class FeatureExtractor():
     def __init__(self):
@@ -13,15 +13,16 @@ class FeatureExtractor():
     def fit(self, X_ds, y):
         for var in self.variables:
             if var not in self.means.keys():
-                self.means[var] = X_ds[var].mean(axis=0).values
-                self.sds[var] = X_ds[var].std(axis=0).values
+                self.means[var] = X_ds[var].mean(axis=0).values.astype(np.float32)
+                self.sds[var] = X_ds[var].std(axis=0).values.astype(np.float32)
                 self.sds[var][self.sds[var] == 0] = 1
             var_norm = (X_ds[var] - self.means[var]) / self.sds[var]
             var_flat = var_norm.stack(latlon=("lat", "lon")).values
+            del var_norm
             var_flat[np.isnan(var_flat)] = 0
             self.pca[var] = PCA(n_components=self.num_comps)
             self.pca[var].fit(var_flat)
-
+            del var_flat
 
     def transform(self, X_ds):
         X = np.zeros((np.prod(X_ds[self.variables[0]].shape[:1]), 
@@ -30,7 +31,9 @@ class FeatureExtractor():
         for var in self.variables:
             var_norm = (X_ds[var] - self.means[var]) / self.sds[var]
             var_flat = var_norm.stack(latlon=("lat", "lon")).values
+            del var_norm
             var_flat[np.isnan(var_flat)] = 0
             X[:, c:c+self.num_comps] = self.pca[var].transform(var_flat)
             c += self.num_comps
+            del var_flat
         return X
