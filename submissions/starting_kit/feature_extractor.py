@@ -1,39 +1,13 @@
-import numpy as np
-from sklearn.decomposition import PCA
+from sklearn.linear_model import LogisticRegression
+from sklearn.base import BaseEstimator
 
 
-class FeatureExtractor():
+class Classifier(BaseEstimator):
     def __init__(self):
-        self.means = {}
-        self.sds = {}
-        self.variables = ["TS", "PSL", "TMQ"]
-        self.pca = {}
-        self.num_comps = 20
+        self.clf = LogisticRegression(C=0.01, penalty="l1")
 
-    def fit(self, X_ds, y):
-        for var in self.variables:
-            if var not in self.means.keys():
-                self.means[var] = X_ds[var].mean(axis=0).values.astype(np.float32)
-                self.sds[var] = X_ds[var].std(axis=0).values.astype(np.float32)
-                self.sds[var][self.sds[var] == 0] = 1
-            var_norm = (X_ds[var] - self.means[var]) / self.sds[var]
-            var_flat = var_norm.stack(latlon=("lat", "lon")).values
-            del var_norm
-            var_flat[np.isnan(var_flat)] = 0
-            self.pca[var] = PCA(n_components=self.num_comps)
-            self.pca[var].fit(var_flat)
-            del var_flat
+    def fit(self, X, y):
+        self.clf.fit(X, y)
 
-    def transform(self, X_ds):
-        X = np.zeros((np.prod(X_ds[self.variables[0]].shape[:1]), 
-                      self.num_comps * len(self.variables)), dtype=np.float32)
-        c = 0
-        for var in self.variables:
-            var_norm = (X_ds[var] - self.means[var]) / self.sds[var]
-            var_flat = var_norm.stack(latlon=("lat", "lon")).values
-            del var_norm
-            var_flat[np.isnan(var_flat)] = 0
-            X[:, c:c+self.num_comps] = self.pca[var].transform(var_flat)
-            c += self.num_comps
-            del var_flat
-        return X
+    def predict_proba(self, X):
+        return self.clf.predict_proba(X)
